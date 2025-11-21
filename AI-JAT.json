@@ -1,0 +1,1113 @@
+{
+  "name": "AI-JAT",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "AI for Job Search",
+        "formDescription": "This Form helps to search to 10 jobs according to your request and writes Cover Letter for each and Sends You the Mail in just 10 minutes.\n\nNote :- Please provide the description properly or Directly paste content of resume in description box",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Name",
+              "placeholder": "Your Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "placeholder": "example@email.com",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Job Posted Time (In Hours)",
+              "fieldType": "number",
+              "placeholder": "24 Hours by default"
+            },
+            {
+              "fieldLabel": "Keyword",
+              "placeholder": "React, Backend, etc",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Location",
+              "placeholder": "India or Pune "
+            },
+            {
+              "fieldLabel": "Experience Level",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Internship"
+                  },
+                  {
+                    "option": "Entry Level"
+                  },
+                  {
+                    "option": "Associate"
+                  },
+                  {
+                    "option": "Mid-Senior level"
+                  },
+                  {
+                    "option": "Director"
+                  },
+                  {
+                    "option": "Executive"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Work Location",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "On-site"
+                  },
+                  {
+                    "option": "Hybrid"
+                  },
+                  {
+                    "option": "Remote"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Job Type",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Full-time"
+                  },
+                  {
+                    "option": "Part-time"
+                  },
+                  {
+                    "option": "Contract"
+                  },
+                  {
+                    "option": "Temporary"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Your Description in Short With Skills",
+              "fieldType": "textarea",
+              "placeholder": "I am a frontend developer proficient in React with 2 years of experience",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Easy Apply",
+              "fieldType": "checkbox",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Yes"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -272,
+        -80
+      ],
+      "id": "26f543d3-1140-448e-ac3a-4290bc88d72d",
+      "name": "On form submission",
+      "webhookId": "c882030e-8e30-48b1-abbe-45d51e6f9e13"
+    },
+    {
+      "parameters": {
+        "amount": 40
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1680,
+        -80
+      ],
+      "id": "575760d4-1ae5-4fb9-b2fd-57d9692abdd0",
+      "name": "Wait",
+      "webhookId": "01217939-ea45-445d-aedd-821c6b864135"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bef237c2-0de7-4ee1-b8f9-517c3b73ecce",
+              "name": "description",
+              "value": "={{ $json.description.replaceAll(/\\s+/g, \" \") }}",
+              "type": "string"
+            },
+            {
+              "id": "f791aaf9-4825-4b5b-a05a-c0ccef5ec1f8",
+              "name": "jobid",
+              "value": "={{ $json.jobid.split(\":\").last() }}",
+              "type": "string"
+            },
+            {
+              "id": "307df75f-ad27-4a77-a3fb-0b670cf6d847",
+              "name": "applyLink",
+              "value": "={{ \"https://www.linkedin.com/jobs/view/\"+ $json.jobid.split(\":\").last() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2304,
+        -96
+      ],
+      "id": "5d02763c-df2c-4e34-82ef-99e61adad1cb",
+      "name": "Edit Modify Job Attributes"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        2656,
+        144
+      ],
+      "id": "128c3e64-d88c-4f9a-b207-257277436877",
+      "name": "Google Gemini Chat Model4",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "hK4Z7H3xtiWk64OA",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={{ $json.output.replaceAll(/```(?:json)?/g, \"\") }}",
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2992,
+        -80
+      ],
+      "id": "e8c9b50d-e655-472c-ada9-ae983b7d3895",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "jsCode": "\nlet url = `https://www.linkedin.com/jobs/search/?f_TPR=r$input.first().json.seconds`\n\nconst keyword = $('On form submission').first().json.Keyword \nconst location = $('On form submission').first().json.Location\nconst experienceLevel = $('On form submission').first().json[\"Experience Level\"]\nconst remote = $('On form submission').first().json[\"Work Location\"]\nconst jobType = $('On form submission').first().json[\"Job Type\"]\nconst easyApply = $('On form submission').first().json[\"Easy Apply\"][0]\n\nif (keyword != \"\") {\n  url += `&keywords=${keyword}`;\n}\n\nif (location != \"\") {\n  url += `&location=${location}`;\n}\n\nif (experienceLevel !== \"\") {\n  // Transform experience levels to LinkedIn codes\n  // Internship -> 1, Entry level -> 2, Associate -> 3\n  // Mid-Senior level -> 4, Director -> 5, Executive -> 6\n  const transformedExperiences = experienceLevel\n    .split(\",\")\n    .map((exp) => {\n      switch (exp.trim()) {\n        case \"Internship\": return \"1\";\n        case \"Entry level\": return \"2\";\n        case \"Associate\": return \"3\";\n        case \"Mid-Senior level\": return \"4\";\n        case \"Director\": return \"5\";\n        case \"Executive\": return \"6\";\n        default: return \"\";\n      }\n    })\n    .filter(Boolean);\n  url += `&f_E=${transformedExperiences.join(\",\")}`;\n}\n\nif (remote.length != \"\") {\n  // Transform remote options to LinkedIn codes\n  // On-Site -> 1, Remote -> 2, Hybrid -> 3\n  const transformedRemote = remote\n    .split(\",\")\n    .map((e) => {\n      switch (e.trim()) {\n        case \"Remote\": return \"2\";\n        case \"Hybrid\": return \"3\";\n        case \"On-Site\": return \"1\";\n        default: return \"\";\n      }\n    })\n    .filter(Boolean);\n  url += `&f_WT=${transformedRemote.join(\",\")}`;\n}\n\nif (jobType != \"\") {\n  // Transform job types to LinkedIn codes\n  // Full-time -> F, Part-time -> P, Contract -> C, etc.\n  const transformedJobType = jobType\n    .split(\",\")\n    .map((type) => type.trim().charAt(0).toUpperCase());\n  url += `&f_JT=${transformedJobType.join(\",\")}`;\n}\n\nif (easyApply != \"\") {\n  url += \"&f_EA=true\";\n}\n\nreturn {url}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        400,
+        -80
+      ],
+      "id": "89054b8b-2300-4179-abe5-34ea0593dae4",
+      "name": "Make Linkden URl"
+    },
+    {
+      "parameters": {
+        "jsCode": "const hours =  $input.first().json[\"Type Hours \"]\nlet loopNo = Number($input.first().json['No. Of Jobs'])\nlet seconds = 3600* Number(hours);\nif (!hours){\n  seconds = 24*3600\n}\nreturn {seconds,loopNo}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        176,
+        -80
+      ],
+      "id": "1315af15-d96d-455c-8e44-3a2e83f956fa",
+      "name": "Convert Hours"
+    },
+    {
+      "parameters": {
+        "resource": "spreadsheet",
+        "title": "={{ $json.Name }} Job List",
+        "sheetsUi": {
+          "sheetValues": [
+            {
+              "title": "=Job-List"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -48,
+        -80
+      ],
+      "id": "855602f0-3499-4b44-b878-5a40ab880d07",
+      "name": "Create spreadsheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "AxWRS8k6Ip0OAd2h",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('Create spreadsheet').item.json.spreadsheetId }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $('Create spreadsheet').item.json.sheets[0].properties.sheetId }}",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Company",
+              "displayName": "Company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Location",
+              "displayName": "Location",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Link",
+              "displayName": "Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Score",
+              "displayName": "Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Cover Letter",
+              "displayName": "Cover Letter",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        3440,
+        -80
+      ],
+      "id": "3fa76e79-65c6-47ba-8d01-56020af2baf9",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "AxWRS8k6Ip0OAd2h",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"Name\": \"\",\n  \"Email\": \"\",\n  \"Title\": \"\",\n  \"Company\": \"\",\n  \"Location\": \"\",\n  \"Link\": \"\",\n  \"Score\": \"\",\n  \"Description\": \"\",\n  \"Cover Letter\": \"\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3216,
+        -80
+      ],
+      "id": "dbee8340-b471-4f01-9fd4-b6a826fef750",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('Create spreadsheet').item.json.spreadsheetId }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $('Create spreadsheet').item.json.sheets[0].properties.sheetId }}",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $('On form submission').item.json.Name }}",
+            "Email": "={{ $('On form submission').item.json.Email }}",
+            "Score": "={{ $('Edit Fields').item.json.score }}",
+            "Cover Letter": "={{ $('Edit Fields').item.json.coverLetter }}",
+            "Description": "={{ $('Edit Modify Job Attributes').item.json.description }}",
+            "Location": "={{ $('Edit Modify Job Attributes').item.json.location }}",
+            "Company": "={{ $('Edit Modify Job Attributes').item.json.company }}",
+            "Title": "={{ $('Edit Modify Job Attributes').item.json.title }}",
+            "Link": "={{ $('Edit Modify Job Attributes').item.json.applyLink }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Company",
+              "displayName": "Company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Location",
+              "displayName": "Location",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Link",
+              "displayName": "Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Score",
+              "displayName": "Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Cover Letter",
+              "displayName": "Cover Letter",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        3664,
+        48
+      ],
+      "id": "e3877a73-2d0a-475f-90f3-30a3970ef282",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "AxWRS8k6Ip0OAd2h",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        2784,
+        144
+      ],
+      "id": "a131c858-e131-4890-a5b5-e31b5fc4bb65",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "iLMzVDdHHOFDbpsD",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://docs.google.com/spreadsheets/d/{{ $('Create spreadsheet').item.json.spreadsheetId }}/export?format=xlsx&gid={{ $('Create spreadsheet').item.json.sheets[0].properties.sheetId }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleSheetsOAuth2Api",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1968,
+        -272
+      ],
+      "id": "a8a429f5-ea22-4ac3-bdba-3a9073ed14d0",
+      "name": "HTTP Request2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "AxWRS8k6Ip0OAd2h",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "spreadsheet",
+        "operation": "deleteSpreadsheet",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('Create spreadsheet').item.json.spreadsheetId }}",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2416,
+        -272
+      ],
+      "id": "c89b1eec-96fa-4dd2-8dbb-f48dfee66f3d",
+      "name": "Delete spreadsheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "AxWRS8k6Ip0OAd2h",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1744,
+        -272
+      ],
+      "id": "2831e251-5275-4214-bdab-f942c2babdb1",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('On form submission').item.json.Email }}",
+        "subject": "={{ $('On form submission').item.json.Name }}, Your Job Toolkit is Ready!",
+        "message": "=<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Your Personalized Job Toolkit</title>\n    <!-- Basic inline CSS for email client compatibility -->\n    <style>\n        body {\n            font-family: 'Inter', Arial, sans-serif;\n            margin: 0;\n            padding: 0;\n            background-color: #f7f9fc;\n            -webkit-text-size-adjust: 100%;\n            -ms-text-size-adjust: 100%;\n        }\n        .container {\n            max-width: 600px;\n            margin: 40px auto;\n            padding: 20px;\n            background-color: #ffffff;\n            border-radius: 12px;\n            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);\n            border-top: 5px solid #007bff; /* Accent color */\n        }\n        h1 {\n            color: #1e293b;\n            font-size: 24px;\n            font-weight: 600;\n            margin-top: 0;\n            margin-bottom: 20px;\n        }\n        p {\n            color: #4b5563;\n            line-height: 1.6;\n            margin-bottom: 15px;\n        }\n        ul {\n            list-style: none;\n            padding-left: 0;\n            margin: 20px 0;\n        }\n        li {\n            padding: 8px 0;\n            color: #1f2937;\n            border-bottom: 1px dashed #e5e7eb;\n        }\n        .signature-block {\n            margin-top: 30px;\n            padding-top: 15px;\n            border-top: 1px solid #d1d5db;\n        }\n        .signature-name {\n            font-weight: 700;\n            color: #007bff;\n            font-size: 16px;\n        }\n        .contact-info {\n            font-size: 14px;\n            color: #6b7280;\n        }\n        .contact-info a {\n            color: #007bff;\n            text-decoration: none;\n        }\n    </style>\n</head>\n<body>\n\n    <div class=\"container\">\n        <!-- Subject: Your Personalized Job Toolkit is Ready: Top 10 Roles & Custom Cover Letters -->\n\n        <h1>Success! Your Automated Job Toolkit is Ready</h1>\n\n        <p>Hello, {{ $('On form submission').item.json.Name }}</p>\n\n        <p>Thank you so much for submitting your request. I'm pleased to confirm that your personalized job search package has been successfully compiled and is attached to this email.</p>\n\n        <p>This automated toolkit is designed to streamline your application process and provide immediate value. The attached Excel sheet includes:</p>\n\n        <ul>\n            <li>✨ **Top 10 Job Descriptions & Links:** The most relevant job postings, complete with direct application links.</li>\n            <li>📝 **Custom Cover Letters:** A unique, tailored cover letter drafted for *each* of the 10 positions.</li>\n            <li>📁 **Consolidated Data:** A single, clean spreadsheet for easy tracking and management.</li>\n        </ul>\n\n        <p>Please review the attached sheet and start applying! All the information you need is organized and ready to go.</p>\n\n        <p>I'm passionate about building custom workflows to save time and effort. If you have any other tasks, reports, or data automation needs, please don't hesitate to reach out. I would be glad to discuss how further automation can benefit you.</p>\n\n        <div class=\"signature-block\">\n            <p style=\"margin-bottom: 5px;\">Best regards,</p>\n            <p class=\"signature-name\">Kshitij Patil</p>\n            <p class=\"contact-info\">\n                Automation Specialist<br>\n                Email: <a href=\"mailto:kpn8n.io@gmail.com\">kpn8n.io@gmail.com</a>\n            </p>\n        </div>\n\n    </div>\n\n</body>\n</html>\n",
+        "options": {
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {}
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2192,
+        -272
+      ],
+      "id": "74b3c67a-ef5f-4bcf-92c2-1a8d82f06bf8",
+      "name": "Send a message",
+      "webhookId": "878b633f-f1cc-43aa-99a6-117277d82622",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "qGeiSq4izUgI6GI7",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "#                       Project name\n\n## AI-Driven Job Application Toolkit (JAT)",
+        "height": 192,
+        "width": 560
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1888,
+        -1040
+      ],
+      "typeVersion": 1,
+      "id": "a1eb6905-133b-48c5-919f-df9fe78bdf80",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## [Form Link](https://kpn8n.duckdns.org/form/c882030e-8e30-48b1-abbe-45d51e6f9e13)",
+        "height": 80,
+        "width": 150
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1904,
+        -752
+      ],
+      "typeVersion": 1,
+      "id": "59b6a904-858c-407c-83f6-9f0358f73e54",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        624,
+        -80
+      ],
+      "id": "ea46e4cb-1a3f-4371-a119-329b00ac7104",
+      "name": "Get Jobs List"
+    },
+    {
+      "parameters": {
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "links",
+              "cssSelector": "ul.jobs-search__results-list li div a[class*=\"base-card\"]",
+              "returnValue": "attribute",
+              "attribute": "href",
+              "returnArray": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        848,
+        -80
+      ],
+      "id": "89527645-e2c3-4daf-8380-23dfab76d4ef",
+      "name": "Extract Job Links"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Input is [{ links: [array of job links] }]\nconst jobLinksBefore =$json.links || [];\n// const jobLimit = Number($('Convert Hours').item.json.loopNo || 5);\n// Trim to the desired number of jobs\nconst links = jobLinksBefore.slice(0, 10);\n\n// Return a flat array of objects for Split In Batches\nreturn {links};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1072,
+        -80
+      ],
+      "id": "537a2e2b-f759-427f-96ae-b332a5336f0e",
+      "name": "First 10 Links Only"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "links",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1296,
+        -80
+      ],
+      "id": "6083fb94-278c-4c1d-ba44-1abbf4a7b9cc",
+      "name": "Separate Links"
+    },
+    {
+      "parameters": {
+        "options": {
+          "reset": false
+        }
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1488,
+        -80
+      ],
+      "id": "914c9237-72df-4b21-b03e-06d28d3ff3ee",
+      "name": "Get JD for Each Link"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.links }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1888,
+        -80
+      ],
+      "id": "438e703d-dca0-4b58-8e42-0beb65c8b135",
+      "name": "Job ID Page"
+    },
+    {
+      "parameters": {
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "title",
+              "cssSelector": "div h1"
+            },
+            {
+              "key": "company",
+              "cssSelector": "div span a\t"
+            },
+            {
+              "key": "location",
+              "cssSelector": "div span[class*='topcard__flavor topcard__flavor--bullet']\t"
+            },
+            {
+              "key": "description",
+              "cssSelector": "div.description__text.description__text--rich\t"
+            },
+            {
+              "key": "jobid",
+              "cssSelector": "a[data-item-type='semaphore']\t",
+              "returnValue": "attribute",
+              "attribute": "data-semaphore-content-urn"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        2096,
+        -96
+      ],
+      "id": "6d4e3c05-1737-4b11-910b-79fb6f0687c3",
+      "name": "Extract Required Data From JD"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an assistant that helps match candidates to job opportunities. Your task is to review my description, then analyze both the my description and job description to calculate a job matching score. Additionally, create a cover letter based on my description and the job description. The cover letter should contain at least 2 paragraphs and should exclude the name, address, and signature sections from the beginning and end.\n\nWhen using special characters like quotation marks (\"), ensure they are properly escaped with a backslash. The output must be formatted as valid JSON that can be parsed without errors.\n\nFor example your response should be like: {\"score\": 80, \"coverLetter\": \"sample cover letter\" }\n\njob_description: {{ $json.description }}\nmy_description: {{ $('On form submission').item.json['Your Description in Short With Skills'] }} \n",
+        "needsFallback": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        2480,
+        -96
+      ],
+      "id": "7ff8afad-3c92-40ea-a4df-a3ed5c0ae8b6",
+      "name": "Generate Cover Letter"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Create spreadsheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Job ID Page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Modify Job Attributes": {
+      "main": [
+        [
+          {
+            "node": "Generate Cover Letter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate Cover Letter",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Make Linkden URl": {
+      "main": [
+        [
+          {
+            "node": "Get Jobs List",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert Hours": {
+      "main": [
+        [
+          {
+            "node": "Make Linkden URl",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create spreadsheet": {
+      "main": [
+        [
+          {
+            "node": "Convert Hours",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append or update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Get JD for Each Link",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate Cover Letter",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Delete spreadsheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Jobs List": {
+      "main": [
+        [
+          {
+            "node": "Extract Job Links",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Job Links": {
+      "main": [
+        [
+          {
+            "node": "First 10 Links Only",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "First 10 Links Only": {
+      "main": [
+        [
+          {
+            "node": "Separate Links",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Separate Links": {
+      "main": [
+        [
+          {
+            "node": "Get JD for Each Link",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get JD for Each Link": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Job ID Page": {
+      "main": [
+        [
+          {
+            "node": "Extract Required Data From JD",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Required Data From JD": {
+      "main": [
+        [
+          {
+            "node": "Edit Modify Job Attributes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Cover Letter": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "8b3841de-13e4-46c2-87e7-2ac1167d0558",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5311ef094250faec1bd5441a23b8d1ac577238cb951abed1af715c7fb9250add"
+  },
+  "id": "Bh6P2NcH1q9GIgxy",
+  "tags": []
+}
