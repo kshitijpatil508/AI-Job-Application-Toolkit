@@ -2,6 +2,7 @@
 
 **Automate finding jobs, generate tailored cover letters, and get a ready Excel + email — all from a single web form.**
 
+[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-Click_Here-blue?style=for-the-badge&logo=googleforms)](https://kpn8n.duckdns.org/form/c882030e-8e30-48b1-abbe-45d51e6f9e13)
 ---
 
 ## 📖 Overview & Problem Solved
@@ -38,8 +39,6 @@ This workflow is built for **developers and automation users** who want to accel
 ---
 
 ## 🚀 Demo & Workflow Visuals
-
-* **Live Demo:** [Click Here](https://kpn8n.duckdns.org/form/c882030e-8e30-48b1-abbe-45d51e6f9e13)
 
 ### Workflow Diagram
 <img width="1920" height="1080" alt="Screenshot 2025-11-21 at 15 29 45" src="https://github.com/user-attachments/assets/dd02b354-41c8-463b-8171-25448aa8ad8a" />
