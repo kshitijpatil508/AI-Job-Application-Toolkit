@@ -2,7 +2,7 @@
 
 **Automate finding jobs, generate tailored cover letters, and get a ready Excel + email — all from a single web form.**
 
-[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-Click_Here-blue?style=for-the-badge&logo=googleforms)](https://kpn8n.duckdns.org/form/c882030e-8e30-48b1-abbe-45d51e6f9e13)
+[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-Click_Here-blue?style=for-the-badge&logo=googleforms)](https://freen8n.kshitijpatil.xyz/form/e6845654-8529-4ed7-bfef-578bb877ff3a)
 ---
 
 ## 📖 Overview & Problem Solved
